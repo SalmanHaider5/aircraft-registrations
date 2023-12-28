@@ -1,6 +1,3 @@
-import fs from 'fs';
-import * as cheerio from 'cheerio';
-import xcelToJson from 'convert-excel-to-json';
 import { logger } from '../config'
 import { Registrations } from '../db/models';
 import { registrationsConstants } from '../constants'

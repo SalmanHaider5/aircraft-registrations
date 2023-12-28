@@ -1,4 +1,3 @@
-import moment from 'moment';
 import fetch from 'node-fetch';
 import * as registrationParser from './registrations'
 
@@ -16,18 +15,8 @@ const fetchJsonData = async (url, options) => {
     return data;
 }
 
-const fetchCurrentFormatedDay = async () => {
-    return moment().format('L').toString();
-}
-
-const fetchPreviousFormatedDay = async (days) => {
-    return moment().subtract(days, 'days').format('L').toString();
-}
-
 export {
-    registrationParser,
     fetchJsonData,
-    fetchCurrentFormatedDay,
-    fetchPreviousFormatedDay,
-    fetchHtmlContent
+    fetchHtmlContent,
+    registrationParser
 }

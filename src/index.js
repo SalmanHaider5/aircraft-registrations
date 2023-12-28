@@ -1,11 +1,9 @@
 import express from 'express';
-import cors from "cors";
 import { config, logger } from './config';
 import './db';
 import './schedulers';
 
 const app = express();
-app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('Welcome to CAA Parser');

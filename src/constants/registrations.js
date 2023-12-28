@@ -1,5 +1,3 @@
-import path from 'path';
-
 export const registrationsConstants = {
     scheduler: {
         interval: '*/10 * * * *'
