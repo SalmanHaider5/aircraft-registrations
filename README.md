@@ -4,7 +4,7 @@
 To get you started you can simply clone the repository
 
 ```
-git clone https://github.com/SalmanHaider5/aircraft
+git clone https://github.com/SalmanHaider5/aircraft-registrations
 ```
 and install the dependencies
 ```
