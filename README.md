@@ -21,6 +21,7 @@ ENVIRONMENT=
 ```
 
 ### Run the Application
+Add app name which needs to be parsed `app=caa` or `app=faa`
 ```
-npm run start
+npm run start app=
 ```

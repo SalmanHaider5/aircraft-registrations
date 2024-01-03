@@ -62,6 +62,9 @@ const registrations = new mongoose.Schema({
     },
     awDate: {
         type: String
+    },
+    date: {
+        type: String
     }
 });
 const Registrations = mongoose.model('Registrations', registrations);
