@@ -28,5 +28,5 @@ npm run start app=
 ```
 To run flights history
 ```
-npm run start app=
+npm run flights
 ```
