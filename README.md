@@ -26,7 +26,7 @@ Add app name which needs to be parsed `app=caa` or `app=faa`
 ```
 npm run start app=
 ```
-To run flights history
+To store flights history, Keep excel sheet in root directory and run
 ```
 npm run flights
 ```
