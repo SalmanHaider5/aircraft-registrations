@@ -1,13 +1,16 @@
 import express from 'express';
 import { config, logger } from './config';
 import './db';
-import './schedulers';
+import { flightHistoryService } from './services'
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Welcome to CAA Parser');
+app.get('/', async (req, res) => {
+    const response = await flightHistoryService.createFligtsHistory();
+    res.json(response);
 });
+
+
 
 const port = config.port;
 

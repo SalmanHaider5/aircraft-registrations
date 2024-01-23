@@ -18,10 +18,15 @@ PORT=
 MONGO_URL=
 DB_NAME=
 ENVIRONMENT=
+RADARBOX_API_KEY=
 ```
 
 ### Run the Application
 Add app name which needs to be parsed `app=caa` or `app=faa`
+```
+npm run start app=
+```
+To run flights history
 ```
 npm run start app=
 ```
