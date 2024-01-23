@@ -8,5 +8,12 @@ export const flightsHistoryConstants = {
     headers: {
         'Authorization': 'Bearer ' + key
     },
-    aircraftTypes: ["BE4W"]
+    aircraftTypes: ["BE4W"],
+    excelSheetColumns: {
+        A: 'aircraft',
+        C: 'description',
+        D: 'make',
+        E: 'model',
+        F: 'category'
+    }
 }

@@ -10,8 +10,6 @@ app.get('/', async (req, res) => {
     res.json(response);
 });
 
-
-
 const port = config.port;
 
 app.listen(port, () => {

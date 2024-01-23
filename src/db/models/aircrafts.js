@@ -16,6 +16,18 @@ const aircrafts = new mongoose.Schema({
     classDescription: {
         type: String
     },
+    aircraft: {
+        type: String
+    },
+    make: {
+        type: String
+    },
+    model: {
+        type: String
+    },
+    category: {
+        type: String
+    },
     companyIcao: {
         type: String
     },

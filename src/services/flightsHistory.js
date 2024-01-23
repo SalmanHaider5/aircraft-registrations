@@ -1,17 +1,73 @@
+import fs from 'fs';
+import xcelToJson from 'convert-excel-to-json';
 import { logger } from '../config'
 import { Aircrafts, Flights } from '../db/models';
 import { flightsHistoryConstants } from '../constants'
 import { fetchJsonData } from '../utils';
 
+export const readExcel = async () => {
+    try{
+        const { excelSheetColumns } = flightsHistoryConstants;
+        const files = fs.readdirSync('./');
+        const excelFiles = files.map(file => {
+            const fileNameArray = file.split(".");
+            if(fileNameArray[fileNameArray.length - 1] === 'xlsx'){
+                return file;
+            }
+        }).filter(file => !!file);
+        if(excelFiles.length > 1 || excelFiles.length === 0){
+            return {
+                sccess: false,
+                statusCode: 422,
+                error: 'There is no file or multiple files. Please keep just 1 *.xslx file.'
+            }
+        }
+        const result = xcelToJson({
+            sourceFile: `./${excelFiles[0]}`,
+            columnToKey: excelSheetColumns
+        });
+        let obj = [];
+        if(result && result.Sheet1){
+            obj = result.Sheet1
+            obj.shift();
+        }else{
+            logger.info({
+                event: 'Data from Excel File',
+                data: obj
+            });
+        }
+        return obj;
+    }catch(err){
+        logger.error(err);
+    }
+}
+
+const clearTables = async () => {
+    try{
+        await Aircrafts.deleteMany({});
+        await Flights.deleteMany({});
+    }catch(err){
+        logger.error(err);
+    }
+}
+
 const createAircrafts = async (data) => {
     try{
-        await Aircrafts.insertMany(data, { ordered: false }).catch(err => {
+        const sheetData = await readExcel();
+        const mappedData = data.map(aircraft => {
+            const otherData = sheetData.find(row => row.description === aircraft.typeDescription) || {};
+            return {
+                ...aircraft,
+                ...otherData
+            }
+        })
+        await Aircrafts.insertMany(mappedData, { ordered: false }).catch(err => {
             logger.error(err);
         });
         logger.info({
             event: 'Service: Aircrafts added to Database'
         });
-        const registrations = data.map(aircraft => aircraft.registration)
+        const registrations = mappedData.map(aircraft => aircraft.registration)
         logger.info({
             event: 'Registrations',
             registrations
@@ -62,6 +118,7 @@ const fetchHistory = async (registrations) => {
 export const createFligtsHistory = async () => {
     try{
         const { aircraftTypes, aircraftSearchUrl, headers } = flightsHistoryConstants
+        await clearTables();
         logger.info({
             event: 'Service: Create Flights History',
         });
@@ -80,6 +137,7 @@ export const createFligtsHistory = async () => {
                 });
             }
         }
+        
         return { message: 'Flights Added' }
     }catch(err){
         logger.error(err);
