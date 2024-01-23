@@ -4,7 +4,8 @@
   "description": "Parser for CAA",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js --exec babel-node"
+    "start": "nodemon src/index.js --exec babel-node",
+    "flights": "nodemon src/app.js --exec babel-node"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "dotenv": "^16.3.1",
     "nodemon": "^3.0.2"
