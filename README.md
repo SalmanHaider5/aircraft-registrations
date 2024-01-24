@@ -30,3 +30,14 @@ To store flights history, Keep excel sheet in root directory and run
 ```
 npm run flights
 ```
+
+### APIs for Flights History
+```
+GET - /add # To add new Data
+```
+```
+GET - /update #To update new data
+``` 
+```
+GET - /clear # To remove data from tables
+```

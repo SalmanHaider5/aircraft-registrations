@@ -42,10 +42,11 @@ export const readExcel = async () => {
     }
 }
 
-const clearTables = async () => {
+export const clearTables = async () => {
     try{
         await Aircrafts.deleteMany({});
         await Flights.deleteMany({});
+        return { message: "All data removed from tables!" }
     }catch(err){
         logger.error(err);
     }
@@ -118,7 +119,6 @@ const fetchHistory = async (registrations) => {
 export const createFligtsHistory = async () => {
     try{
         const { aircraftTypes, aircraftSearchUrl, headers } = flightsHistoryConstants
-        await clearTables();
         logger.info({
             event: 'Service: Create Flights History',
         });
@@ -139,6 +139,22 @@ export const createFligtsHistory = async () => {
         }
         
         return { message: 'Flights Added' }
+    }catch(err){
+        logger.error(err);
+    }
+}
+
+export const updateAircrafts = async () => {
+    try{
+        const sheetData = await readExcel();
+        for(let data of sheetData){
+            logger.info({
+                event: 'Service: Updating Data',
+                data
+            });
+            await Aircrafts.updateMany({ typeDescription: data.description }, data);
+        }
+        return { message: 'Records in Database successfully updated!' }
     }catch(err){
         logger.error(err);
     }
