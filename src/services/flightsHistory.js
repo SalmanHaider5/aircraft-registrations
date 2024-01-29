@@ -68,12 +68,6 @@ const createAircrafts = async (data) => {
         logger.info({
             event: 'Service: Aircrafts added to Database'
         });
-        const registrations = mappedData.map(aircraft => aircraft.registration)
-        logger.info({
-            event: 'Registrations',
-            registrations
-        });
-        return registrations
     }catch(err){
         logger.error(err);
     }
@@ -81,10 +75,13 @@ const createAircrafts = async (data) => {
 
 const createFlights = async (data) => {
     try{
-        const response = await Flights.insertMany(data, { ordered: false }).catch(err => {
+        const mappedData = data.map(aircraft => {
+            return aircraft.aircraftStatitics.map(stat => { return { ...stat, registration: aircraft.registration}})
+        });
+        const history = [].concat(...mappedData);
+        await Flights.insertMany(history, { ordered: false }).catch(err => {
             logger.error(err);
         });
-        return response;
     }catch(err){
         logger.error(err);
     }
@@ -118,11 +115,11 @@ const fetchHistory = async (registrations) => {
 
 export const createFligtsHistory = async () => {
     try{
-        const { aircraftTypes, aircraftSearchUrl, headers } = flightsHistoryConstants
+        const { aircraftTypes, aircraftSearchUrl, headers, response } = flightsHistoryConstants
         logger.info({
             event: 'Service: Create Flights History',
         });
-        const urls = aircraftTypes.map(type => `${aircraftSearchUrl}?aircraftType=${type}`);
+        const urls = aircraftTypes.map(type => `${aircraftSearchUrl}?aircraftType=${type}&includeStatistics=true`);
         for(let i in urls){
             logger.info({
                 event: 'Service: Requesting for Aircrafts Data',
@@ -130,10 +127,15 @@ export const createFligtsHistory = async () => {
             });
             const data = await fetchJsonData(urls[i], { headers });
             if(data.success && data.aircraft.length > 0){
-                const registrations = await createAircrafts(data.aircraft)
-                await fetchHistory(registrations)
+                const aircrafts = data.aircraft;
+                await createAircrafts(aircrafts)
+                await createFlights(aircrafts);
                 logger.info({
                     event: 'Service: Flights history added to Database'
+                });
+            }else{
+                logger.error({
+                    event: 'Service: Something went wrong!'
                 });
             }
         }
@@ -143,6 +145,7 @@ export const createFligtsHistory = async () => {
         logger.error(err);
     }
 }
+
 
 export const updateAircrafts = async () => {
     try{
